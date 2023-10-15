@@ -80,6 +80,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ContextMenu}">
                     <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="{DynamicResource GeneralMenuCornerRadius}" Padding="{DynamicResource PopupMenuPadding}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Background="{TemplateBinding Background}"
                             Grid.IsSharedSizeScope="True">
@@ -97,15 +98,18 @@
         <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
         <Setter Property="Background" Value="{DynamicResource TopPanelFilterToggleBackgroundBrush}" />
         <Setter Property="Focusable" Value="False" />
-        <Setter Property="Margin" Value="10,6,0,6" />
+        <Setter Property="Margin" Value="10,0,0,0" />
         <Setter Property="Padding" Value="9,0,9,0" />
         <Setter Property="Foreground" Value="{DynamicResource GlyphBrush}" />
         <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="{DynamicResource TopPanelItemBorderThickness}" />
+        <Setter Property="Padding" Value="{DynamicResource TopPanelItemPadding}" />
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Border Background="{TemplateBinding Background}" BorderThickness="1" Name="Border"
+                    <Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" Name="Border"
+                            Padding="{TemplateBinding Padding}"
                             CornerRadius="{DynamicResource TopPanelItemsCornerRadius}" BorderBrush="{TemplateBinding BorderBrush}">
                         <StackPanel Orientation="Horizontal" Margin="6,0,6,0">
                             <TextBlock Text="&#xef29;" Name="FilterIcon"
@@ -140,7 +144,7 @@
     </Style>
 
     <Style x:Key="TopPanelNotificationsToggle" TargetType="ToggleButton">
-        <Setter Property="Margin" Value="10,6,0,6" />
+        <Setter Property="Margin" Value="10,0,0,0" />
         <Setter Property="MinWidth" Value="35" />
         <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
         <Setter Property="Foreground" Value="{DynamicResource GlyphBrush}" />
@@ -180,16 +184,16 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TopPanel}">
-                    <Border Height="50" BorderBrush="{DynamicResource PanelSeparatorBrush}"
-                            Background="{TemplateBinding Background}"
+                    <Border Height="52" Background="{DynamicResource PanelBackgroundBrush}"
                             d:DesignWidth="1280"
                             d:DataContext="{x:Static DesignMainViewModel.DesignIntance}">
                         <Border.Style>
                             <Style TargetType="Border">
-                                <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource PanelSeparatorBrush}" />
+                                <Setter Property="BorderThickness" Value="0,0,0,0" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Settings ShowPanelSeparators}" Value="False">
-                                        <Setter Property="BorderThickness" Value="0" />
+                                        <Setter Property="BorderBrush" Value="Transparent" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -203,25 +207,50 @@
                                        Margin="10,0,5,0"/>
                             </Border>
 
-                            <SearchBox x:Name="PART_TextMainSearch"
-                                        Margin="5,6,0,6" DockPanel.Dock="Left"
-                                        WindowChrome.IsHitTestVisibleInChrome="True"
-                                        Width="300" />
-                            
-                            <StackPanel x:Name="PART_PanelMainItems" Orientation="Horizontal"
-                                        VerticalAlignment="Stretch" Margin="0,6,0,6"/>
+                            <Border DockPanel.Dock="Left"
+                                    Visibility="{Binding ElementName=PART_TextMainSearch}">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Padding" Value="20,6,0,6" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Settings ShowPanelSeparators}" Value="True">
+                                                <Setter Property="Padding" Value="20,6,0,6" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <SearchBox x:Name="PART_TextMainSearch"
+                                       Style="{DynamicResource TopPanelSearchBox}"
+                                       WindowChrome.IsHitTestVisibleInChrome="True"
+                                       Width="250" />
+                            </Border>
 
-                            <CheckBox x:Name="PART_ToggleFilter" ToolTip="{DynamicResource LOCFilters}"
-                                      Style="{DynamicResource TopPanelFilterToggle}"
-                                      DockPanel.Dock="Left" />
+                            <Border DockPanel.Dock="Left"
+                                    Margin="15,6,0,6"
+                                    Padding="15,0,15,0"
+                                    CornerRadius="12">
+                                <DockPanel>
+                                    <StackPanel x:Name="PART_PanelMainItems" Orientation="Horizontal"
+                                                VerticalAlignment="Stretch" />
 
-                            <CheckBox x:Name="PART_ToggleNotifications"
-                                      Style="{DynamicResource TopPanelNotificationsToggle}"
-                                      DockPanel.Dock="Left" />
+                                    <CheckBox x:Name="PART_ToggleFilter" ToolTip="{DynamicResource LOCFilters}"
+                                              Style="{DynamicResource TopPanelFilterToggle}"
+                                              DockPanel.Dock="Left" />
 
-                            <StackPanel x:Name="PART_PanelMainPluginItems" Orientation="Horizontal"
-                                        VerticalAlignment="Stretch" Margin="15,6,15,6"
-                                        DockPanel.Dock="{Settings PluginTopPanelAlignment}"/>
+                                    <CheckBox x:Name="PART_ToggleNotifications"
+                                              Style="{DynamicResource TopPanelNotificationsToggle}"
+                                              DockPanel.Dock="Left" />
+                                </DockPanel>
+                            </Border>
+
+                            <Border DockPanel.Dock="{Settings PluginTopPanelAlignment}"
+                                    Margin="15,6,12,6"
+                                    Padding="15,0,15,0"
+                                    CornerRadius="12">
+                                <StackPanel x:Name="PART_PanelMainPluginItems" Orientation="Horizontal"
+                                        VerticalAlignment="Stretch" />
+                            </Border>
+ 
 
                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left"
                                         HorizontalAlignment="Center" Margin="0,5,0,5">

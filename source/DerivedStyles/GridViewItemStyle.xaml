@@ -18,7 +18,14 @@
                     <Grid Background="{DynamicResource GridItemBackgroundBrush}"
                           Margin="{Settings ItemSpacingMargin}"
                           x:Name="ItemGrid">
-                        <ContentPresenter />
+                        <TextBlock x:Name="DropShadowVisibilityProxy"
+                                   Visibility="Collapsed"
+                                   Tag="{DynamicResource GridViewCoverDisplayDropShadowEffect}" />
+                        <Border Style="{DynamicResource DropShadowBorderStyle}"
+                                Width="{Binding ElementName=Content, Path=Width}" Height="{Binding ElementName=Content, Path=Height}"
+                                Visibility="{Binding ElementName=DropShadowVisibilityProxy, Path=Tag, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                Tag="{DynamicResource GridViewCoverUseRoundedCorners}" />
+                        <ContentPresenter x:Name="Content" />
                         <TextBlock x:Name="ZoomOnHoverProxy" Visibility="Collapsed"
                                    Tag="{DynamicResource GridViewCoverZoomOnHover}" />
                         <Border x:Name="SelectionBorder" BorderThickness="3" Margin="-3"
@@ -88,11 +95,13 @@
                             </MultiDataTrigger.ExitActions>
                         </MultiDataTrigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="BorderBrush" Value="{DynamicResource HoverBrush}" TargetName="SelectionBorder"/>
+                            <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}" TargetName="SelectionBorder"/>
+                            <Setter Property="Opacity" Value="{DynamicResource GlyphColorObscureOpacity}" TargetName="SelectionBorder" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="BorderBrush" Value="{DynamicResource GlyphBrush}" TargetName="SelectionBorder"/>
                             <Setter Property="Canvas.ZIndex" Value="90" />
+                            <Setter Property="Opacity" Value="1" TargetName="SelectionBorder" />
                         </Trigger>
                         <DataTrigger Binding="{Settings ShowGridItemBackground}" Value="False">
                             <Setter Property="Background" Value="Transparent" TargetName="ItemGrid" />

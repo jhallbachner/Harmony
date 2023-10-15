@@ -20,7 +20,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListBox}">
                     <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
-                            Background="{TemplateBinding Background}" CornerRadius="0">
+                            Background="{TemplateBinding Background}" CornerRadius="{DynamicResource ControlCornerRadius}">
                         <ScrollViewer Focusable="False"
                                       HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                                       VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
@@ -48,13 +48,20 @@
                 <ControlTemplate TargetType="{x:Type ListBoxItem}">
                     <Grid>
                         <Border x:Name="HoverRectangle" IsHitTestVisible="False" Visibility="Collapsed"
-                                Background="{DynamicResource HoverBrush}" CornerRadius="{DynamicResource ControlCornerRadiusSmall}" />
+                                Opacity="{DynamicResource GlyphColorObscureOpacity}"
+                                Background="{DynamicResource GlyphBrush}" CornerRadius="{DynamicResource ControlCornerRadius}" />
                         <Border x:Name="SelectedRectangle" IsHitTestVisible="False" Visibility="Collapsed"
-                                Background="{DynamicResource GlyphBrush}" CornerRadius="{DynamicResource ControlCornerRadiusSmall}"/>
+                                Background="{DynamicResource GlyphBrush}" CornerRadius="{DynamicResource ControlCornerRadius}"/>
                         <Border Padding="{TemplateBinding Padding}" Background="Transparent">
                             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                              Margin="3,0,0,0" />
+                                              Margin="3,0,0,0">
+                                <ContentPresenter.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                    </Style>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>

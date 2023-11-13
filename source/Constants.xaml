@@ -103,6 +103,16 @@
     <SolidColorBrush x:Key="HoverBrush" Color="{DynamicResource HighlightGlyphColor}" />
     <SolidColorBrush x:Key="GlyphBrush" Color="{DynamicResource GlyphColor}" />
 
+    <LinearGradientBrush x:Key="GlyphBrush1" StartPoint="0,0" EndPoint="1,0" >
+        <GradientStop Color="#a945ff" Offset="-0.1"/>
+        <GradientStop Color="{DynamicResource GlyphColor}" Offset="0.7"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GlyphBrush2" StartPoint="-0.1,0.5" EndPoint="1.2,1" >
+        <GradientStop Color="#456aff" Offset="0"/>
+        <GradientStop Color="{DynamicResource GlyphColor}" Offset="0.7"/>
+    </LinearGradientBrush>
+    
     <SolidColorBrush x:Key="BottomButtonHighlightBrush" Color="{DynamicResource BottomButtonHighlightColor}" />
     <SolidColorBrush x:Key="HighlightGlyphBrush" Color="{DynamicResource HighlightGlyphColor}" />
     <SolidColorBrush x:Key="PopupBorderBrush" Color="{DynamicResource PopupBorderColor}" />

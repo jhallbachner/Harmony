@@ -57,12 +57,21 @@
                                                 Tag="{DynamicResource GridViewCoverDisplayLibraryBanner}"
                                                 HorizontalAlignment="Center"
                                                 Visibility="{Binding Tag, RelativeSource={RelativeSource Self}, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                                    <Image Name="PART_ImageCover" Height="{Settings GridItemHeight}"
-                                           SnapsToDevicePixels="True"
-                                           RenderOptions.BitmapScalingMode="Fant" StretchDirection="Both"
-                                           HorizontalAlignment="Center" VerticalAlignment="Top"
-                                           Stretch="{Settings CoverArtStretch}" />
-
+                                    <Grid>
+                                        <Image Name="PART_ImageCover" Height="{Settings GridItemHeight}"
+                                            SnapsToDevicePixels="True"
+                                            RenderOptions.BitmapScalingMode="Fant" StretchDirection="Both"
+                                            HorizontalAlignment="Center" VerticalAlignment="Top"
+                                            Stretch="{Settings CoverArtStretch}" 
+                                            />
+                                            <Image Name="PART_ImageCover2" Height="{Settings GridItemHeight}"
+                                            SnapsToDevicePixels="True"
+                                            RenderOptions.BitmapScalingMode="Fant" StretchDirection="Both"
+                                            HorizontalAlignment="Center" VerticalAlignment="Top"
+                                            Stretch="{Settings CoverArtStretch}" 
+                                            Source="{Binding ElementName=DuplicateHider_SourceSelector1, Path=Content.Current.CoverImage, Converter={StaticResource ImageStringToImageConverter}, FallbackValue={x:Null}, TargetNullValue={x:Null}}"
+                                            />
+                                    </Grid>
                                 </StackPanel>
 
                                 <Border Background="#99000000" x:Name="TextGameName" Visibility="Collapsed"

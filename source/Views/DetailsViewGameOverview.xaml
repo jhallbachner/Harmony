@@ -299,6 +299,11 @@
                                                     <Button Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="PART_ButtonMoreActions" Content="{DynamicResource LOCMoreAction}" Margin="10,0,0,0" Style="{DynamicResource ContextButtonViews}" Padding="0" />
                                                 </Grid>
                                                 <Button DockPanel.Dock="Left" x:Name="PART_ButtonEditGame" Content="&#xEDED;" VerticalAlignment="Top" Margin="10,0,0,0" Height="40" Width="40" Focusable="False" FontFamily="{DynamicResource FontIcoFont}" />
+                                                <ToggleButton Name="GameFavoriteToggleButton" Margin="10,0,0,0" Focusable="False"
+                                                              Style="{DynamicResource PanelFavoriteToggleButton}"
+                                                              Height="40"
+                                                              Visibility="{PluginStatus Plugin=felixkmh_Extras_Plugin}"
+                                                              IsChecked="{PluginSettings Plugin=ThemeExtras, Path=Game.Favorite, Mode=TwoWay, FallbackValue={StaticResource False}}"/>
                                                 <ContentControl x:Name="PlayState_GameStateSwitchControl" Margin="10,0,0,0"
                                                                 Visibility="{PluginSettings Plugin=PlayState, Path=IsControlVisible, FallbackValue=Collapsed, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                                 <ContentControl x:Name="ScreenshotsVisualizer_PluginButton" Margin="10,0,0,0"
@@ -362,15 +367,45 @@
                                                     <TextBlock Name="PART_TextPlayTime"/>
                                                 </StackPanel>
                                             </DockPanel>
-                                            <DockPanel Visibility="{Binding Visibility, ElementName=PART_ElemCompletionStatus, Mode=OneWay}" Margin="0,0,15,0">
+                                            
+                                            <DockPanel Margin="0,0,15,0">
+                                                <DockPanel.Style>
+                                                    <Style TargetType="DockPanel">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding ElementName=PART_ButtonCompletionStatus, Path=Visibility}" Value="Visible">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding ElementName=ThemeExtras_SettableCompletionStatus, Path=Visibility}" Value="Visible">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Settings DetailsVisibility.CompletionStatus}" Value="False">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </DockPanel.Style>
                                                 <Viewbox Stretch="Uniform" Height="40">
                                                     <TextBlock Text="&#xEED6;" Style="{DynamicResource IconsTextBlockStyle}"/>
                                                 </Viewbox>
+
                                                 <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
                                                     <Label Name="PART_ElemCompletionStatus" Content="{DynamicResource LOCCompletionStatus}" />
-                                                    <Button Name="PART_ButtonCompletionStatus" Style="{StaticResource PropertyItemButton}" Margin="0" />
+
+                                                    <Border Tag="{PluginStatus Plugin=felixkmh_Extras_Plugin, Status=Installed}"
+                                                            Visibility="{Binding RelativeSource={RelativeSource Self}, Path=Tag, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                                                        <Button Name="PART_ButtonCompletionStatus" Style="{StaticResource PropertyItemButton}" Margin="0" />
+                                                    </Border>
+
+                                                    <ContentControl Visibility="{PluginStatus Plugin=felixkmh_Extras_Plugin, Status=Installed}"
+                                                                    x:Name="ThemeExtras_SettableCompletionStatus">
+                                                        <ContentControl.Resources>
+                                                            <Style TargetType="UserControl" BasedOn="{StaticResource ThemeExtrasUserControlCompStatusStyle}" />
+                                                        </ContentControl.Resources>
+                                                    </ContentControl>
                                                 </StackPanel>
                                             </DockPanel>
+                                            
                                             <DockPanel Margin="0,0,15,0">
                                                 <DockPanel.Style>
                                                     <Style TargetType="{x:Type DockPanel}">
@@ -656,7 +691,23 @@
                                                         <TextBlock Text="{DynamicResource LOCLinksLabel}" />
                                                     </StackPanel>
                                                 </Label>
-                                                <ItemsControl Name="PART_ItemsLinks" />
+                                                <ItemsControl ItemsSource="{Binding Game.Links}"
+                                                          Visibility="{Binding ElementName=PART_ElemLinks, Path=Visibility}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <StackPanel/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate DataType="{x:Type Link}">
+                                                            <Button Content="{Binding Name}"
+                                                                        Style="{StaticResource PropertyItemLinkButton}"
+                                                                        ToolTip="{Binding Url}"
+                                                                        Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.OpenLinkCommand}"
+                                                                        CommandParameter="{Binding}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
                                             </GridEx>
                                             <!--#regionend-->
                                             <!--#region Success Story-->
@@ -713,7 +764,7 @@
                                             </StackPanel>
                                             <!--#endregion-->
                                         </StackPanel>
-                                        <TabControl Margin="0,4,10,0" Style="{DynamicResource TabControlDetailsView}"
+                                        <TabControl Margin="0,15,10,0" Style="{DynamicResource TabControlDetailsView}"
                                                     Focusable="False">
                                             <TabItem Name="PART_ElemDescription">
                                                 <TabItem.Header>
@@ -783,6 +834,26 @@
                                                 </StackPanel>
                                             </TabItem>
 
+                                            <TabItem Visibility="{PluginSettings Plugin=SteamScreenshots, Path=IsControlVisible, FallbackValue=Collapsed, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <TabItem.Header>
+                                                    <TextBlock Text="{DynamicResource LOC_SteamScreenshots_SteamScreenshotsLabel}"
+                                                           Style="{DynamicResource DetailsViewTabHeaderStyle}" />
+                                                </TabItem.Header>
+                                                <StackPanel Orientation="Vertical" Background="{TemplateBinding Background}" Margin="0,15,0,0">
+                                                    <ContentControl x:Name="SteamScreenshots_SteamScreenshotsViewControl" Margin="0,10,0,0" FontWeight="Normal"/>
+                                                </StackPanel>
+                                            </TabItem>
+                                            
+                                            <TabItem Visibility="{PluginSettings Plugin=VNDBNexus, Path=IsControlVisible, FallbackValue=Collapsed, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <TabItem.Header>
+                                                    <TextBlock Text="VNDB"
+                                                           Style="{DynamicResource DetailsViewTabHeaderStyle}" />
+                                                </TabItem.Header>
+                                                <StackPanel Orientation="Vertical" Background="{TemplateBinding Background}" Margin="0,15,0,0">
+                                                    <ContentControl x:Name="VNDBNexus_VndbVisualNovelViewControl" Margin="0,10,0,0" FontWeight="Normal"/>
+                                                </StackPanel>
+                                            </TabItem>
+                                            
                                             <TabItem>
                                                 <TabItem.Header>
                                                     <TextBlock Text="{DynamicResource LOCExtra_Metadata_Loader_VideoLabel}" Style="{DynamicResource DetailsViewTabHeaderStyle}" />
@@ -804,7 +875,17 @@
                                                     </Style>
                                                 </TabItem.Style>
                                                 <StackPanel Margin="0,16,0,0">
-                                                    <ContentControl x:Name="ExtraMetadataLoader_VideoLoaderControl" VerticalAlignment="Top"/>
+                                                    <ContentControl x:Name="ExtraMetadataLoader_VideoLoaderControl" VerticalAlignment="Top">
+                                                        <ContentControl.OpacityMask>
+                                                            <VisualBrush>
+                                                                <VisualBrush.Visual>
+                                                                    <Border Background="Black" CornerRadius="6"
+                                                                            Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ContentControl}}"
+                                                                            Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=ContentControl}}" />
+                                                                </VisualBrush.Visual>
+                                                            </VisualBrush>
+                                                        </ContentControl.OpacityMask>
+                                                    </ContentControl>
                                                 </StackPanel>
                                             </TabItem>
 

@@ -78,7 +78,11 @@
                                 </Grid>
                                 <DockPanel DockPanel.Dock="Top">
                                     <Image Name="PART_ImageIcon" DockPanel.Dock="Left" MaxHeight="32" MaxWidth="32"
-                                           RenderOptions.BitmapScalingMode="Fant" Margin="0,0,10,0" />
+                                           RenderOptions.BitmapScalingMode="Fant" Margin="0,0,10,0">
+                                        <Image.Clip>
+                                            <RectangleGeometry RadiusX="4" RadiusY="4" Rect="0,0,32,32" />
+                                        </Image.Clip>
+                                    </Image>
                                     
                                     <ContentControl x:Name="NewsViewer_PlayersInGameViewerControl"
                                                     DockPanel.Dock="Right" VerticalAlignment="Center">
@@ -112,13 +116,25 @@
                                     </Border>
                                 </DockPanel>
 
-                                <ContentControl DockPanel.Dock="Top" x:Name="DuplicateHider_SourceSelector" 
-                                        HorizontalAlignment="Right"
-                                        VerticalContentAlignment="Center"   
+                                <DockPanel Margin="0,5,0,0" DockPanel.Dock="Top" LastChildFill="False">
+                                    <ContentControl x:Name="DuplicateHider_SourceSelector" 
+                                        Visibility="{PluginSettings Plugin=DuplicateHider, Path=EnableUiIntegration, FallbackValue=Collapsed, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        DockPanel.Dock="Right"
+                                                    HorizontalAlignment="Right"
+                                        VerticalContentAlignment="Center"
+                                                    VerticalAlignment="Center"
                                         Margin="0,0,0,0"  
                                         Height="24"
                                         RenderOptions.BitmapScalingMode="Fant" />
-                                
+
+                                    <ContentControl x:Name="GogSecondClassWatcher_SecondClassWatcherControl"
+                                                    DockPanel.Dock="Right"
+                                                    HorizontalAlignment="Right"
+                                                            VerticalAlignment="Center"
+                                                            Visibility="{PluginSettings Plugin=GogSecondClassWatcher, Path=IsControlVisible, FallbackValue=Collapsed, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                            Margin="0,0,10,0"/>
+                                </DockPanel>
+
                                 <Grid DockPanel.Dock="Top" Margin="0,10,0,10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" MaxWidth="150" />
@@ -179,6 +195,11 @@
                                               x:Name="PART_ScrollViewHost">
                                     <Grid>
                                         <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
@@ -426,7 +447,19 @@
                                                             <TextBlock Text="{DynamicResource LOCCommunityScore}" />
                                                         </StackPanel>
                                                     </Label>
-                                                    <TextBlock Name="PART_TextCommunityScore" VerticalAlignment="Center" Style="{DynamicResource TextBlockGameScore}" />
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Visibility="{Binding ElementName=PART_TextCommunityScore, Path=Visibility}">
+                                                        <TextBlock Name="PART_TextCommunityScore" VerticalAlignment="Center"
+                                                                   Style="{DynamicResource TextBlockGameScore}" />
+                                                        <ContentControl Content="{Binding Game.CommunityScore}"
+                                                                        Padding="6,0,0,4"
+                                                                        HorizontalAlignment="Left"
+                                                                        VerticalAlignment="Center"
+                                                                        Background="Transparent"
+                                                                        Foreground="{Binding ElementName=PART_TextCommunityScore, Path=Foreground}"
+                                                                        Height="{Binding ElementName=PART_TextCommunityScore, Path=ActualHeight}"
+                                                                        ContentTemplate="{StaticResource FiveStarScoreTemplate}"/>
+                                                    </StackPanel>
 
                                                     <Label Name="PART_ElemCriticScore" >
                                                         <StackPanel Orientation="Horizontal">
@@ -434,7 +467,19 @@
                                                             <TextBlock Text="{DynamicResource LOCCriticScore}" />
                                                         </StackPanel>
                                                     </Label>
-                                                    <TextBlock Name="PART_TextCriticScore" VerticalAlignment="Center" Style="{DynamicResource TextBlockGameScore}" />
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Visibility="{Binding ElementName=PART_TextCriticScore, Path=Visibility}">
+                                                        <TextBlock Name="PART_TextCriticScore" VerticalAlignment="Center"
+                                                                   Style="{DynamicResource TextBlockGameScore}" />
+                                                        <ContentControl Content="{Binding Game.CriticScore}"
+                                                                        Padding="6,0,0,4"
+                                                                        HorizontalAlignment="Left"
+                                                                        VerticalAlignment="Center"
+                                                                        Background="Transparent"
+                                                                        Foreground="{Binding ElementName=PART_TextCriticScore, Path=Foreground}"
+                                                                        Height="{Binding ElementName=PART_TextCriticScore, Path=ActualHeight}"
+                                                                        ContentTemplate="{StaticResource FiveStarScoreTemplate}"/>
+                                                    </StackPanel>
 
                                                     <Label Name="PART_ElemUserScore" >
                                                         <StackPanel Orientation="Horizontal">
@@ -442,7 +487,19 @@
                                                             <TextBlock Text="{DynamicResource LOCUserScore}" />
                                                         </StackPanel>
                                                     </Label>
-                                                    <TextBlock Name="PART_TextUserScore" VerticalAlignment="Center" Style="{DynamicResource TextBlockGameScore}" />
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Visibility="{Binding ElementName=PART_TextUserScore, Path=Visibility}">
+                                                        <TextBlock Name="PART_TextUserScore" VerticalAlignment="Center"
+                                                                   Style="{DynamicResource TextBlockGameScore}" />
+                                                        <ContentControl Content="{Binding Game.UserScore}"
+                                                                        Padding="6,0,0,4"
+                                                                        HorizontalAlignment="Left"
+                                                                        VerticalAlignment="Center"
+                                                                        Background="Transparent"
+                                                                        Foreground="{Binding ElementName=PART_TextUserScore, Path=Foreground}"
+                                                                        Height="{Binding ElementName=PART_TextUserScore, Path=ActualHeight}"
+                                                                        ContentTemplate="{StaticResource FiveStarScoreTemplate}"/>
+                                                    </StackPanel>
 
                                                     <Label Name="PART_ElemFeatures" >
                                                         <StackPanel Orientation="Horizontal">
@@ -871,6 +928,23 @@
                                             <StackPanel Margin="0,0,0,25">
                                                 <Separator />
                                                 <ContentControl x:Name="SteamScreenshots_SteamScreenshotsViewControl" Margin="0,10,20,0" />
+                                            </StackPanel>
+                                        </Expander>
+
+                                        <Expander Grid.Row="{DynamicResource GridViewSectionOrderWeb}"
+                                                  IsExpanded="True"
+                                                  Visibility="{Binding ElementName=WebExplorer_BrowserHostViewControl, Path=Content.IsControlVisible, Converter={StaticResource BooleanToVisibilityConverter}, TargetNullValue=Collapsed, FallbackValue=Collapsed}"
+                                                  Margin="0,0,5,0">
+                                            <Expander.Header>
+                                                <TextBlock Text="{DynamicResource LOCWebExplorer_WebLabel}" Style="{DynamicResource BaseTextBlockStyle}"
+                                                           Cursor="Hand"
+                                                           FontWeight="Medium" FontSize="{DynamicResource FontSizeLarge}" />
+                                            </Expander.Header>
+                                            <StackPanel Margin="0,0,0,25">
+                                                <Separator />
+                                                <ContentControl x:Name="WebExplorer_BrowserHostViewControl"
+                                                                Height="{DynamicResource WebExplorerControlHeight}"
+                                                                Margin="0,5,0,5" />
                                             </StackPanel>
                                         </Expander>
                                         
